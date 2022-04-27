@@ -1,3 +1,4 @@
+import { RouterModule } from '@angular/router';
 import { ProductService } from './services/product.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
