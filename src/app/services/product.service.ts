@@ -1,3 +1,4 @@
+import { ProductCategory } from './../common/product-category';
 import { environment } from './../../environments/environment';
 import { Product } from './../common/product';
 import { HttpClient } from '@angular/common/http';
@@ -9,22 +10,40 @@ import { map, Observable } from 'rxjs';
 })
 export class ProductService {
 
+
+
   private baseApi = environment.baseApi;
+
+
 
   constructor(private httpClient: HttpClient) { }
 
-  getProductList(theCategoryId: number): Observable<Product[]>{
+  searchProducts(theKeyword: string): Observable<Product[]> {
+    const searchUrl = `${this.baseApi + "products"}/search/findByNameContainingIgnoreCase?name=${theKeyword}`;
+    return this.getProduct(searchUrl);
+  }
+
+  private getProduct(searchUrl: string):
+    Observable<Product[]> {
+    return this.httpClient.get<GetResponseProducts>(searchUrl)
+      .pipe(map(response => response._embedded.products));
+  }
 
 
-    const searchUrl = `${this.baseApi+"products"}/search/findByCategoryId?id=${theCategoryId}`;
-    return this.httpClient.get<GetResponse>(searchUrl)
-    .pipe(map(response=> response._embedded.products)
-    );
+  getProductList(theCategoryId: number): Observable<Product[]> {
+    const searchUrl = `${this.baseApi + "products"}/search/findByCategoryId?id=${theCategoryId}`;
+    return this.getProduct(searchUrl);
   }
-}
-interface GetResponse
-{
-  _embedded:{
-    products: Product[];
+
+  getProductCategories(): Observable<ProductCategory[]> {
+    return this.httpClient.get<GetResponseProductCategory>(this.baseApi + "product-category")
+      .pipe(map(response => response._embedded.productCategory)
+      );
   }
+
+
 }
+
+interface GetResponseProducts { _embedded: { products: Product[]; } }
+
+interface GetResponseProductCategory { _embedded: { productCategory: ProductCategory[]; } }
