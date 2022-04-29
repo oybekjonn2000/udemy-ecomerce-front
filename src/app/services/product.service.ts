@@ -20,10 +20,10 @@ export class ProductService {
 
   searchProducts(theKeyword: string): Observable<Product[]> {
     const searchUrl = `${this.baseApi + "products"}/search/findByNameContainingIgnoreCase?name=${theKeyword}`;
-    return this.getProduct(searchUrl);
+    return this.getProducts(searchUrl);
   }
 
-  private getProduct(searchUrl: string):
+  private getProducts(searchUrl: string):
     Observable<Product[]> {
     return this.httpClient.get<GetResponseProducts>(searchUrl)
       .pipe(map(response => response._embedded.products));
@@ -32,13 +32,19 @@ export class ProductService {
 
   getProductList(theCategoryId: number): Observable<Product[]> {
     const searchUrl = `${this.baseApi + "products"}/search/findByCategoryId?id=${theCategoryId}`;
-    return this.getProduct(searchUrl);
+    return this.getProducts(searchUrl);
   }
 
   getProductCategories(): Observable<ProductCategory[]> {
     return this.httpClient.get<GetResponseProductCategory>(this.baseApi + "product-category")
       .pipe(map(response => response._embedded.productCategory)
       );
+  }
+
+  getProduct(theProductId: number): Observable<Product>{
+      // need t obuild URl baased on product ID
+      const productUrl = `${this.baseApi+"products"}/${theProductId}`;
+      return this.httpClient.get<Product>(productUrl);
   }
 
 

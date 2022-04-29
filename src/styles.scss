@@ -730,6 +730,10 @@ table.table.table-bordered th{
 .detail-section{
   margin-top:60px
 }
+.detail-img{
+  width: 30%;
+
+}
 /**/
 
 /*
@@ -775,7 +779,7 @@ footer{
   background:#232324;
   z-index:1;
   position:relative;
-  text-align:center
+  text-align:center;
 }
 footer li a{
   color:#313131;
@@ -1043,3 +1047,6 @@ footer ul li{
       padding:8px 0
   }
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
