@@ -9,24 +9,40 @@ import { map, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ProductService {
-
-
-
-  private baseApi = environment.baseApi;
-
-
-
+   baseApi = environment.baseApi;
   constructor(private httpClient: HttpClient) { }
 
   searchProducts(theKeyword: string): Observable<Product[]> {
     const searchUrl = `${this.baseApi + "products"}/search/findByNameContainingIgnoreCase?name=${theKeyword}`;
     return this.getProducts(searchUrl);
   }
+  searchProductsPaginate(
+    thePage: number,
+    thePageSize: number,
+    theKeyword: string): Observable<GetResponseProducts> {
+
+      const searchUrl = `${this.baseApi + "products"}/search/findByNameContainingIgnoreCase?name=${theKeyword}`
+                      +`&page=${thePage}&size=${thePageSize}`;
+      return this.httpClient.get<GetResponseProducts>(searchUrl);
+}
+
 
   private getProducts(searchUrl: string):
     Observable<Product[]> {
     return this.httpClient.get<GetResponseProducts>(searchUrl)
       .pipe(map(response => response._embedded.products));
+  }
+
+
+  getProductListPaginate(thePage: number,
+                         thePageSize: number,
+                         theCategoryId: number): Observable<GetResponseProducts> {
+                            /**+
+                            * page and size
+                            */
+    const searchUrl = `${this.baseApi + "products"}/search/findByCategoryId?id=${theCategoryId}`
+                                      +`&page=${thePage}&size=${thePageSize}`;
+    return this.httpClient.get<GetResponseProducts>(searchUrl);
   }
 
 
@@ -50,6 +66,16 @@ export class ProductService {
 
 }
 
-interface GetResponseProducts { _embedded: { products: Product[]; } }
+interface GetResponseProducts {
+  _embedded: { products: Product[];
+  },
+  page: {
+    size: number,
+    totalElemets: number,
+    totalPages:number,
+    number: number
+
+  }
+}
 
 interface GetResponseProductCategory { _embedded: { productCategory: ProductCategory[]; } }

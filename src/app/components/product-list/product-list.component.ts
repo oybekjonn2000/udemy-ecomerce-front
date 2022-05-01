@@ -10,9 +10,17 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ProductListComponent implements OnInit {
 
-  products!: Product[];
-  currentCategoryID!: number;
-  searchMode!: boolean;
+  products: Product[] = [];
+  currentCategoryID: number = 1;
+  previousCategoryId: number = 1;
+  searchMode: boolean = false;
+
+  //new properties for pagination
+  thePageNumber: number = 1;
+  thePageSize: number = 5;
+  theTotalElements: number = 0;
+
+  previousKeyword!: string;
 
   constructor
     (
@@ -27,23 +35,32 @@ export class ProductListComponent implements OnInit {
 
   listProducts() {
     this.searchMode = this.route.snapshot.paramMap.has('keyword');
-    if(this.searchMode){
+    if (this.searchMode) {
       this.handleSearchProducts();
     }
     else {
       this.handleListProducts();
     }
-    
+
   }
-  handleSearchProducts(){
-  const theKeyword: string = <string>this.route.snapshot.paramMap.get('keyword');
-  // now search for the products using keyword
-  this.productSvc.searchProducts(theKeyword).subscribe(
-    data=>{
-      this.products=data;
+  handleSearchProducts() {
+    const theKeyword: string = <string>this.route.snapshot.paramMap.get('keyword');
+
+
+    // if we a different keyword than previous
+
+    if (this.previousKeyword != theKeyword) {
+      this.thePageNumber = 1;
     }
-  )
+    this.previousKeyword=theKeyword;
+    console.log(`keyword=${theKeyword}, thepagenumber=${this.thePageNumber}`);
+
+    // now search for the products using keyword
+    this.productSvc.searchProductsPaginate(this.thePageNumber-1,
+                                            this.thePageSize,
+                                            theKeyword).subscribe(this.processResult());
   }
+
   handleListProducts() {
     //check if "id" parameter is available
     const hasCategoryId: boolean = this.route.snapshot.paramMap.has('id');
@@ -55,8 +72,46 @@ export class ProductListComponent implements OnInit {
       this.currentCategoryID = 1;
     }
 
-    this.productSvc.getProductList(this.currentCategoryID).subscribe(data => {
-      this.products = data;
-    })
+    //check if we have a different category than previous
+    //Note: aangular will reuse a component if it is currently being viewed
+    //if we have different category id than previous
+    //then se thePageNumber back to 1;
+
+    if (this.previousCategoryId != this.currentCategoryID) {
+      this.thePageNumber = 1;
+    }
+    this.previousCategoryId = this.currentCategoryID;
+
+    console.log(`currentcategoryID=${this.currentCategoryID}, thePageNumber=${this.thePageNumber}`);
+
+
+    this.productSvc.getProductListPaginate(
+      this.thePageNumber - 1,
+      this.thePageSize,
+      this.currentCategoryID)
+      .subscribe(this.processResult());
+  }
+
+  processResult() {
+    return (data: any) => {
+      this.products = data._embedded.products;
+      this.thePageNumber = data.page.number + 1;
+      this.thePageSize = data.page.size;
+      this.theTotalElements = data.page.totalElements;
+    };
+  }
+
+  updatePageSize(pagesize: number) {
+    this.thePageSize = pagesize;
+    this.thePageNumber = 1;
+    this.listProducts();
+
+  }
+
+  addToCart(theProduct: Product){
+
+    console.log(`add to cart : ${theProduct.name}, ${theProduct.unitPrice}`);
+    
+
   }
 }
