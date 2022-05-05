@@ -11,12 +11,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./product-details.component.scss']
 })
 export class ProductDetailsComponent implements OnInit {
+
+
   product: Product = new Product();
 
-  constructor(
-    private productSvc: ProductService,
-    private route: ActivatedRoute,
-    private cartSvc: CartService) { }
+  constructor(private productService: ProductService,
+              private cartService: CartService,
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(() => {
@@ -25,9 +26,11 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   handleProductDetails() {
-    //get the "id" param string . convert to a number using + sybmol
-    const theProductId: number = +<any>this.route.snapshot.paramMap.get('id');
-    this.productSvc.getProduct(theProductId).subscribe(
+
+    // get the "id" param string. convert string to a number using the "+" symbol
+    const theProductId: number =<any>this.route.snapshot.paramMap.get('id');
+
+    this.productService.getProduct(theProductId).subscribe(
       data => {
         this.product = data;
       }
@@ -35,9 +38,11 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   addToCart() {
+
     console.log(`Adding to cart: ${this.product.name}, ${this.product.unitPrice}`);
-    const theCartItem = new CartItem(this.product)
-    this.cartSvc.addToCart(theCartItem)
+    const theCartItem = new CartItem(this.product);
+    this.cartService.addToCart(theCartItem);
+
   }
 
 }
