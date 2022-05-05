@@ -8,6 +8,7 @@ import { CartItem } from '../common/cart-item';
 export class CartService {
 
 
+
   cartItems: CartItem[] = [];
 
   totalPrice: Subject<number> = new Subject<number>();
@@ -24,17 +25,20 @@ export class CartService {
     if (this.cartItems.length > 0) {
       // find the item in the cart based on item id
 
-      existingCartItem! ==
-      this.cartItems.find
-      ( tempCartItem => tempCartItem.id === theCartItem.id );
+      for (let tempCartItem of this.cartItems) {
+        if (tempCartItem.id === theCartItem.id) {
+          existingCartItem = tempCartItem;
+          break;
+        }
+      }
 
       // check if we found it
-      alreadyExistsInCart = (existingCartItem! != undefined);
+      alreadyExistsInCart = (existingCartItem != undefined);
     }
 
     if (alreadyExistsInCart) {
       // increment the quantity
-      existingCartItem!.quantity++;
+      existingCartItem.quantity++;
     }
     else {
       // just add the item to the array
