@@ -1,3 +1,4 @@
+import { CheckoutComponent } from './components/checkout/checkout.component';
 import { CartDetailsComponent } from './components/cart-details/cart-details.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
@@ -6,6 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   { path: 'category/:id/:name', component: ProductListComponent },
+  { path: 'checkout', component: CheckoutComponent },
   { path: 'category', component: ProductListComponent },
   { path: 'cart-details', component: CartDetailsComponent },
   { path: 'products', component: ProductListComponent },

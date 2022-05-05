@@ -58,6 +58,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CartStatusComponent } from './components/cart-status/cart-status.component';
 import { CartDetailsComponent } from './components/cart-details/cart-details.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
+import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
@@ -66,7 +68,8 @@ import { CartDetailsComponent } from './components/cart-details/cart-details.com
     SearchComponent,
     ProductDetailsComponent,
     CartStatusComponent,
-    CartDetailsComponent
+    CartDetailsComponent,
+    CheckoutComponent
   ],
   imports: [
     BrowserModule,
@@ -109,7 +112,8 @@ import { CartDetailsComponent } from './components/cart-details/cart-details.com
     MatSortModule,
     MatTableModule,
     BrowserAnimationsModule,
-    NgbModule
+    NgbModule,
+    ReactiveFormsModule 
   ],
   providers: [ProductService],
   bootstrap: [AppComponent]
