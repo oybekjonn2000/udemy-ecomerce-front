@@ -2,8 +2,9 @@ import { State } from './../../common/state';
 import { Country } from './../../common/country';
 import { JsonpClientBackend } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ShopFormService } from 'src/app/services/shop-form.service';
+import { CustomValidators } from 'src/app/common/custom-validators';
 
 @Component({
   selector: 'app-checkout',
@@ -32,9 +33,12 @@ export class CheckoutComponent implements OnInit {
   ngOnInit(): void {
     this.checkoutFormGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
-        firstName: [''],
-        lastName: [''],
-        email: ['']
+        firstName: new FormControl
+        ('', [Validators.required, Validators.minLength(2),
+         CustomValidators.notOnlyWhitespace]),
+
+        lastName: new FormControl('', [Validators.required, Validators.minLength(2)]),
+        email: new FormControl('',[Validators.required, Validators.pattern('a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$')]),
       }),
 
       shippingAddress: this.formBuilder.group({
@@ -85,9 +89,9 @@ export class CheckoutComponent implements OnInit {
     });
 
     //populate countries
-    this.shopFormService.getCountries().subscribe(data=>{
+    this.shopFormService.getCountries().subscribe(data => {
       console.log("Retrived countries" + JSON.stringify(data));
-      this.countries=data;
+      this.countries = data;
     });
   }
 
@@ -96,6 +100,20 @@ export class CheckoutComponent implements OnInit {
     console.log("handling the submit btn");
     console.log(this.checkoutFormGroup.get('customer')?.value);
     console.log(this.checkoutFormGroup.get('customer')?.value.email);
+
+    if(this.checkoutFormGroup.invalid){
+      this.checkoutFormGroup.markAllAsTouched();
+    }
+  }
+
+  get firstName() {
+    return this.checkoutFormGroup.get('customer.firstName');
+  }
+  get lastName() {
+    return this.checkoutFormGroup.get('customer.lastName');
+  }
+  get email() {
+    return this.checkoutFormGroup.get('customer.email');
   }
 
   copyShippingAddressToBillingAddress(event: any) {
@@ -131,7 +149,7 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
-  getStates(formGroupName: string){
+  getStates(formGroupName: string) {
     const formGroup = this.checkoutFormGroup.get(formGroupName);
 
     const countryCode = formGroup?.value.country.code;
@@ -139,13 +157,13 @@ export class CheckoutComponent implements OnInit {
 
     console.log(`${formGroupName} country code: ${countryCode}`);
     console.log(`${formGroupName} country name: ${countryName}`);
-    this.shopFormService.getStates(countryCode).subscribe(data=>{
+    this.shopFormService.getStates(countryCode).subscribe(data => {
 
-      if(formGroupName==='shippingAddress'){
-        this.shippingAddressStates=data;
+      if (formGroupName === 'shippingAddress') {
+        this.shippingAddressStates = data;
       }
       else {
-        this.billingAddressStates=data;
+        this.billingAddressStates = data;
       }
 
       // select first item by default
