@@ -77,10 +77,10 @@ export class CheckoutComponent implements OnInit {
       creditCard: this.formBuilder.group({
         cardType: new FormControl('', [Validators.required]),
         nameOnCard: new FormControl('', [Validators.required,
-        Validators.minLength(5),
+        Validators.minLength(2),
         CustomValidators.notOnlyWhitespace]),
-        cardNumber: new FormControl('', [Validators.required,Validators.pattern('[0-9]{16}')]),
-        securityCode: new FormControl('', [Validators.required,Validators.pattern('[0-9]{3}')]),
+        cardNumber: new FormControl('', [Validators.required,Validators.maxLength(16),Validators.pattern('[0-9]{16}')]),
+        securityCode: new FormControl('', [Validators.required,Validators.maxLength(3),Validators.pattern('[0-9]{3}')]),
         expirationMonth: [''],
         expirationYear: ['']
 

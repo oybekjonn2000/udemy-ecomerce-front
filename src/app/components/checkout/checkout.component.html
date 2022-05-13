@@ -365,20 +365,17 @@
             <div class="col-md-2"> <label>Card Number</label></div>
             <div class="col-md-9">
               <div class="input-space">
-                <input type="text" formControlName="cardNumber">
+                <input type="text" formControlName="cardNumber" maxlength="16">
 
-                <div
-                *ngIf="creditCardNumber?.invalid && (creditCardNumber?.dirty || creditCardNumber?.touched)"
-                class="alert alert-danger">
-                <div
-                  *ngIf="creditCardNumber?.errors?.['required'] || creditCardNumber?.errors?.['notOnlyWhitespace']">
+                <div *ngIf="creditCardNumber?.invalid && (creditCardNumber?.dirty || creditCardNumber?.touched)"class="alert alert-danger">
+                <div *ngIf="creditCardNumber?.errors?.['required'] || creditCardNumber?.errors?.['notOnlyWhitespace']">
                   Credit number type is required
                 </div>
-                <div
-                *ngIf="creditCardNumber?.errors?.['pattern']">
-                Credit number must be 16 digits long
+                <div *ngIf="creditCardNumber?.errors?.['pattern'] || creditCardSecurityCode?.errors?.['maxlength']">
+                  Credit number must be 16 digits long
+                </div>
               </div>
-              </div>
+
               </div>
             </div>
           </div>
@@ -388,7 +385,17 @@
             <div class="col-md-2"> <label>Security Code</label></div>
             <div class="col-md-9">
               <div class="input-space">
-                <input type="text" formControlName="securityCode">
+                <input type="text" formControlName="securityCode" maxlength="3">
+
+                <div *ngIf="creditCardSecurityCode?.invalid && (creditCardSecurityCode?.dirty || creditCardSecurityCode?.touched)"class="alert alert-danger">
+                  <div *ngIf="creditCardSecurityCode?.errors?.['required'] || creditCardSecurityCode?.errors?.['notOnlyWhitespace']">
+                    Security code is required
+                  </div>
+                  <div *ngIf="creditCardSecurityCode?.errors?.['pattern'] || creditCardSecurityCode?.errors?.['maxlength']">
+                    Security code must be 3 digits long
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
