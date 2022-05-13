@@ -1,3 +1,4 @@
+import { CartService } from './../../services/cart.service';
 import { State } from './../../common/state';
 import { Country } from './../../common/country';
 import { JsonpClientBackend } from '@angular/common/http';
@@ -28,9 +29,13 @@ export class CheckoutComponent implements OnInit {
 
 
   constructor(private formBuilder: FormBuilder,
-    private shopFormService: ShopFormService) { }
+    private shopFormService: ShopFormService,
+    private cartService: CartService) { }
 
   ngOnInit(): void {
+    this.reviewCardDetails();
+
+
     this.checkoutFormGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
         firstName: new FormControl('', [Validators.required,
@@ -79,8 +84,8 @@ export class CheckoutComponent implements OnInit {
         nameOnCard: new FormControl('', [Validators.required,
         Validators.minLength(2),
         CustomValidators.notOnlyWhitespace]),
-        cardNumber: new FormControl('', [Validators.required,Validators.maxLength(16),Validators.pattern('[0-9]{16}')]),
-        securityCode: new FormControl('', [Validators.required,Validators.maxLength(3),Validators.pattern('[0-9]{3}')]),
+        cardNumber: new FormControl('', [Validators.required, Validators.maxLength(16), Validators.pattern('[0-9]{16}')]),
+        securityCode: new FormControl('', [Validators.required, Validators.maxLength(3), Validators.pattern('[0-9]{3}')]),
         expirationMonth: [''],
         expirationYear: ['']
 
@@ -112,6 +117,17 @@ export class CheckoutComponent implements OnInit {
       console.log("Retrived countries" + JSON.stringify(data));
       this.countries = data;
     });
+  }
+    reviewCardDetails() {
+    this.cartService.totalQuantity.subscribe(data => {
+      this.totalQuantity = data;
+    });
+    this.cartService.totalPrice.subscribe(data => {
+      this.totalPrice = data;
+    });
+
+
+
   }
 
 
