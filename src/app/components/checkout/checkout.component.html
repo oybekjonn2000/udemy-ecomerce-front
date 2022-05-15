@@ -48,7 +48,7 @@
                 <input type="text" formControlName="email">
 
                 <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="alert alert-danger">
-                  <div *ngIf="email?.errors?.['required'] || lastName?.errors?.['notOnlyWhitespace']">Email is required
+                  <div *ngIf="email?.errors?.['required'] || email?.errors?.['notOnlyWhitespace']">Email is required
                   </div>
                   <div *ngIf="email?.errors?.['pattern']">Email must be a valid email address format</div>
                 </div>
@@ -271,8 +271,7 @@
                   </option>
                 </select>
 
-                <div
-                *ngIf="billingAddressState?.invalid && (billingAddressState?.dirty || billingAddressState?.touched)"
+                <div *ngIf="billingAddressState?.invalid && (billingAddressState?.dirty || billingAddressState?.touched)"
                 class="alert alert-danger">
                 <div
                   *ngIf="billingAddressState?.errors?.['required'] || billingAddressState?.errors?.['notOnlyWhitespace']">
