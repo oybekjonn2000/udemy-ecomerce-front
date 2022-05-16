@@ -1,3 +1,5 @@
+import myAppConfig from './config/my-app-config';
+
 
 import { ProductService } from './services/product.service';
 
@@ -61,6 +63,28 @@ import { CartDetailsComponent } from './components/cart-details/cart-details.com
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
+import { OktaAuthModule, OKTA_CONFIG } from '@okta/okta-angular';
+import { OktaCallbackComponent} from '@okta/okta-angular';
+import { Routes, RouterModule, Router} from '@angular/router';
+
+import { OktaAuth } from '@okta/okta-auth-js';
+import { LoginStatusComponent } from './components/login-status/login-status.component';
+
+const oktaConfig = Object.assign({
+
+  onAuthRequired: (injector:any) => {
+
+    const router = injector.get(Router);
+
+    // Redirect the user to your custom login page
+
+    router.navigate(['/login']);
+
+  }
+
+
+}, myAppConfig.oidc);
+const oktaAuth = new OktaAuth(oktaConfig);
 @NgModule({
   declarations: [
     AppComponent,
@@ -71,7 +95,8 @@ import { LoginComponent } from './components/login/login.component';
     CartStatusComponent,
     CartDetailsComponent,
     CheckoutComponent,
-    LoginComponent
+    LoginComponent,
+    LoginStatusComponent
   ],
   imports: [
     BrowserModule,
@@ -115,9 +140,11 @@ import { LoginComponent } from './components/login/login.component';
     MatTableModule,
     BrowserAnimationsModule,
     NgbModule,
-    ReactiveFormsModule 
+    ReactiveFormsModule ,
+    OktaAuthModule
   ],
-  providers: [ProductService],
+  providers: [ProductService,
+    { provide: OKTA_CONFIG, useValue: oktaConfig }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

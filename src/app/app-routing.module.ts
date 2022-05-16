@@ -1,3 +1,5 @@
+import { LoginComponent } from './components/login/login.component';
+import { OktaCallbackComponent } from '@okta/okta-angular';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { CartDetailsComponent } from './components/cart-details/cart-details.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
@@ -6,6 +8,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
+
+  { path: 'login/callback', component: OktaCallbackComponent },
+  { path: 'login', component: LoginComponent },
   { path: 'category/:id/:name', component: ProductListComponent },
   { path: 'checkout', component: CheckoutComponent },
   { path: 'category', component: ProductListComponent },
