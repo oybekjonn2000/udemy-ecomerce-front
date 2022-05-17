@@ -71,19 +71,13 @@ import { OktaAuth } from '@okta/okta-auth-js';
 import { LoginStatusComponent } from './components/login-status/login-status.component';
 
 const oktaConfig = Object.assign({
-
   onAuthRequired: (injector:any) => {
-
     const router = injector.get(Router);
-
     // Redirect the user to your custom login page
-
     router.navigate(['/login']);
-
   }
-
-
 }, myAppConfig.oidc);
+
 const oktaAuth = new OktaAuth(oktaConfig);
 @NgModule({
   declarations: [
@@ -144,7 +138,8 @@ const oktaAuth = new OktaAuth(oktaConfig);
     OktaAuthModule
   ],
   providers: [ProductService,
-    { provide: OKTA_CONFIG, useValue: oktaConfig }],
+    { provide: OKTA_CONFIG, useValue: {oktaAuth}},
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

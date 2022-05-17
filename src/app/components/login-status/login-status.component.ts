@@ -17,12 +17,14 @@ export class LoginStatusComponent implements OnInit {
 
   isAuthenticated: boolean = false;
   userFullName!: string;
+  username: string;
 
 
-  constructor(private oktaAuthSvc: OktaAuthStateService,@Inject(OKTA_AUTH) private oktaAuth: OktaAuth) { }
+  constructor(private oktaAuthSvc: OktaAuthStateService,@Inject(OKTA_AUTH)
+              private oktaAuth: OktaAuth) { }
 
   ngOnInit(): void {
-
+   
     // subscribe
     this.oktaAuthSvc.authState$.subscribe(
       (result:any)=>{
@@ -30,7 +32,7 @@ export class LoginStatusComponent implements OnInit {
         this.isAuthenticated= result;
         this.getUserDetails();
 
-    })
+    });
   }
 
 
@@ -52,5 +54,8 @@ export class LoginStatusComponent implements OnInit {
     // terminates the session with okta and removes current tokens
     this.oktaAuth.signOut();
   }
+
+
+
 
 }
