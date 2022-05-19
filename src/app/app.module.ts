@@ -69,9 +69,10 @@ import { Routes, RouterModule, Router} from '@angular/router';
 
 import { OktaAuth } from '@okta/okta-auth-js';
 import { LoginStatusComponent } from './components/login-status/login-status.component';
+import { MembersPageComponent } from './components/members-page/members-page.component';
 
 const oktaConfig = Object.assign({
-  onAuthRequired: (injector:any) => {
+  onAuthRequired: (oktaAuth,injector:any) => {
     const router = injector.get(Router);
     // Redirect the user to your custom login page
     router.navigate(['/login']);
@@ -91,7 +92,9 @@ const oktaAuth = new OktaAuth(oktaConfig);
     CartDetailsComponent,
     CheckoutComponent,
     LoginComponent,
-    LoginStatusComponent
+    LoginStatusComponent,
+    MembersPageComponent,
+
   ],
   imports: [
     BrowserModule,
