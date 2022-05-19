@@ -1,12 +1,6 @@
-import { OktaAuthStateService } from '@okta/okta-angular';
-
-import { OKTA_AUTH } from '@okta/okta-angular';
-
-
-
-import { OktaAuth } from '@okta/okta-auth-js';
-
 import { Component, Inject, OnInit } from '@angular/core';
+import { OktaAuthStateService, OKTA_AUTH } from '@okta/okta-angular';
+import { OktaAuth } from '@okta/okta-auth-js';
 
 @Component({
   selector: 'app-login-status',
@@ -15,47 +9,40 @@ import { Component, Inject, OnInit } from '@angular/core';
 })
 export class LoginStatusComponent implements OnInit {
 
-  isAuthenticated: boolean = false;
-  userFullName!: string;
-  username: string;
+  isAuthenticated: boolean=false;
+  userFullName: string;
 
-
-  constructor(private oktaAuthSvc: OktaAuthStateService,@Inject(OKTA_AUTH)
-              private oktaAuth: OktaAuth) { }
+  constructor(private oktaAuthService: OktaAuthStateService,
+    @Inject(OKTA_AUTH)private oktaAuth: OktaAuth) { }
 
   ngOnInit(): void {
-   
-    // subscribe
-    this.oktaAuthSvc.authState$.subscribe(
-      (result:any)=>{
 
-        this.isAuthenticated= result;
+    // Subscribe to authentication state changes
+    this.oktaAuthService.authState$.subscribe(
+      (result) => {
+        this.isAuthenticated = result.isAuthenticated;
         this.getUserDetails();
+      }
+    );
 
-    });
   }
 
-
   getUserDetails() {
-    if(this.isAuthenticated){
-      //fetch the logged in user deatils (user's claims)
+    if (this.isAuthenticated) {
 
-      // user fll nam is exposed as a property name
+      // Fetch the logged in user details (user's claims)
+      //
+      // user full name is exposed as a property name
       this.oktaAuth.getUser().then(
-        (res:any)=>{
-          this.userFullName=res.name;
+        (res) => {
+          this.userFullName = res.name;
         }
       );
     }
   }
 
-
-  logOut(){
-    // terminates the session with okta and removes current tokens
+  logOut() {
+    // Terminates the session with Okta and removes current tokens.
     this.oktaAuth.signOut();
   }
-
-
-
-
 }

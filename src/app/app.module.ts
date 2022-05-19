@@ -75,10 +75,11 @@ const oktaConfig = Object.assign({
     const router = injector.get(Router);
     // Redirect the user to your custom login page
     router.navigate(['/login']);
+
   }
 }, myAppConfig.oidc);
-
 const oktaAuth = new OktaAuth(oktaConfig);
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -138,8 +139,7 @@ const oktaAuth = new OktaAuth(oktaConfig);
     OktaAuthModule
   ],
   providers: [ProductService,
-    { provide: OKTA_CONFIG, useValue: {oktaAuth}},
-  ],
+    { provide: OKTA_CONFIG, useValue: {oktaAuth} }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

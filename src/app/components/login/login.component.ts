@@ -1,14 +1,9 @@
-import { OktaAuthStateService } from '@okta/okta-angular';
-
-import { OKTA_AUTH } from '@okta/okta-angular';
-
-import { OktaAuth } from '@okta/okta-auth-js';
-import myAppConfig from '../../config/my-app-config';
-
 import { Component, Inject, OnInit } from '@angular/core';
+import { OktaAuthStateService, OKTA_AUTH } from '@okta/okta-angular';
+import { OktaAuth } from '@okta/okta-auth-js';
+import OktaSignIn from '@okta/okta-signin-widget';
 
-import  OktaSignIn from '@okta/okta-signin-widget';
-
+import myAppConfig from '../../config/my-app-config';
 
 @Component({
   selector: 'app-login',
@@ -17,37 +12,40 @@ import  OktaSignIn from '@okta/okta-signin-widget';
 })
 export class LoginComponent implements OnInit {
 
-  oktaSignIn: any;
+  oktaSignin: any;
 
-  constructor(private oktaAuthSvc: OktaAuthStateService,@Inject(OKTA_AUTH) private oktaAuth: OktaAuth) {
-    this.oktaSignIn = new OktaSignIn({
-      logo:'assets/image/logo.png',
+  constructor(private oktaAuthService: OktaAuthStateService, @Inject(OKTA_AUTH) private oktaAuth: OktaAuth) {
+
+    this.oktaSignin = new OktaSignIn({
+      logo: 'assets/images/logo.png',
+
+
       baseUrl: myAppConfig.oidc.issuer.split('/oauth2')[0],
-      clientId: myAppConfig.oidc.cliendId,
+      clientId: myAppConfig.oidc.clientId,
       redirectUri: myAppConfig.oidc.redirectUri,
-      authParams:{
-        pkce:true,
-        issuer:myAppConfig.oidc.issuer,
+      authParams: {
+        pkce: true,
+        issuer: myAppConfig.oidc.issuer,
         scopes: myAppConfig.oidc.scopes
       }
-     });
+    });
+
   }
 
   ngOnInit(): void {
+    this.oktaSignin.remove();
 
-    this.oktaSignIn.remove();
-    this.oktaSignIn.renderEl({
-      el:'#okta-sign-in-widget'},  // this nam should be same as div tag id in loginComponent
-      (response:any)=>{
-        if(response.status==="SUCCESS"){
+    this.oktaSignin.renderEl({
+      el: '#okta-sign-in-widget'}, // this name should be same as div tag id in login.component.html
+      (response:any) => {
+        if (response.status === 'SUCCESS') {
           this.oktaAuth.signInWithRedirect();
         }
       },
-       (error:any)=>{
-         throw error;
-       }
-
-      )
+      (error:any) => {
+        throw error;
+      }
+    );
   }
 
 }
