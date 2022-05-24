@@ -144,7 +144,7 @@ export class CheckoutComponent implements OnInit {
 
     let order = new Order();
     order.totalPrice = this.totalPrice;
-    order.totalQunatity = this.totalQuantity;
+    order.totalQuantity = this.totalQuantity;
 
 
 
