@@ -6,7 +6,6 @@ import { CheckoutService } from './../../services/checkout.service';
 import { CartService } from './../../services/cart.service';
 import { State } from './../../common/state';
 import { Country } from './../../common/country';
-import { JsonpClientBackend } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ShopFormService } from 'src/app/services/shop-form.service';
@@ -32,6 +31,8 @@ export class CheckoutComponent implements OnInit {
   shippingAddressStates: State[] = [];
   billingAddressStates: State[] = [];
 
+  storage: Storage = sessionStorage;
+
 
   constructor(private formBuilder: FormBuilder,
     private shopFormService: ShopFormService,
@@ -41,6 +42,8 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.reviewCardDetails();
+    // read the user's email adrress form browser storage
+    const theEmail = JSON.parse(this.storage.getItem("userEmail"));
 
 
     this.checkoutFormGroup = this.formBuilder.group({
@@ -53,7 +56,7 @@ export class CheckoutComponent implements OnInit {
         Validators.minLength(2),
         CustomValidators.notOnlyWhitespace]),
 
-        email: new FormControl('', [Validators.required,
+        email: new FormControl(theEmail, [Validators.required,
           Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$'),
           CustomValidators.notOnlyWhitespace]),
       }),
