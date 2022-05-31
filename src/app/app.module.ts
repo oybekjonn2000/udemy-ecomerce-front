@@ -72,6 +72,7 @@ import { OktaAuth } from '@okta/okta-auth-js';
 import { LoginStatusComponent } from './components/login-status/login-status.component';
 import { MembersPageComponent } from './components/members-page/members-page.component';
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
+import { HomePageComponent } from './components/home-page/home-page.component';
 
 const oktaConfig = Object.assign({
   onAuthRequired: (oktaAuth,injector:any) => {
@@ -97,6 +98,7 @@ const oktaAuth = new OktaAuth(oktaConfig);
     LoginStatusComponent,
     MembersPageComponent,
     OrderHistoryComponent,
+    HomePageComponent,
 
   ],
   imports: [
